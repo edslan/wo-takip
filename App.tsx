@@ -278,7 +278,7 @@ const App: React.FC = () => {
           const history = chatMessages.slice(-6).map(m => `${m.role === 'user' ? 'Kullanıcı' : 'Bakım Asistanı'}: ${m.text}`).join('\n'); 
           const systemInstruction = `Sen profesyonel bir endüstriyel bakım analistisin. Kullanıcıyla karşılıklı sohbet ediyorsun. Veri tabanındaki "job_note" (Arıza/İş Notu) alanlarını mutlaka değerlendirerek arıza kök nedenlerini tespit etmeye çalış. Sohbet geçmişini hatırla ve takip sorularına cevap ver.`; 
           const prompt = `GEÇMİŞ KONUŞMALAR: ${history}\nKULLANICI SORUSU: "${userMessage}"\nGÜNCEL BAKIM VERİLERİ (Notlar Dahil):\n${JSON.stringify(dataSummary)}`; 
-          const response = await ai.models.generateContent({ model: "gemini-3-flash-preview", contents: prompt, config: { systemInstruction, tools: [{ googleSearch: {} }] } }); 
+          const response = await ai.models.generateContent({ model: "gemini-3-flash", contents: prompt, config: { systemInstruction, tools: [{ googleSearch: {} }] } }); 
           setChatMessages(prev => [...prev, { role: 'model', text: response.text || "Analiz yapılamadı.", sources: response.candidates?.[0]?.groundingMetadata?.groundingChunks || [] }]); 
       } catch (err) { 
           setChatMessages(prev => [...prev, { role: 'model', text: "AI motoruyla bağlantı kurulamadı." }]); 

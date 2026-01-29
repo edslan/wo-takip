@@ -62,7 +62,7 @@ const PredictiveMaintenancePage: React.FC<PredictiveMaintenancePageProps> = ({ w
         });
 
         const prompt = `Sen kıdemli bir **Güvenilirlik Mühendisisin (Reliability Engineer)**. Görevin: Verilen SON ${analysisRange} GÜNLÜK vardiya raporlarını ve geçmiş iş emirlerini analiz ederek, sahadaki teknisyenlere verilecek **PROAKTİF (Önleyici)** bakım iş emirlerini oluşturmak. MÜHENDİSLİK YAKLAŞIMIN (P-F Eğrisi Mantığı): Sadece "kırılan" makineleri değil, kırılmaya giden "belirtileri" bulmalısın. GİRDİ VERİLERİ (Kapsam: Son ${analysisRange} Gün): --- VARDİYA RAPORLARI (İnsan Gözlemi) --- ${JSON.stringify(recentReports)} --- İŞ EMRİ ÖZETİ (Sistem Kaydı) --- ${JSON.stringify(assetFailures)} ÇIKTI FORMATI (SADECE VE SADECE SAF JSON ARRAY): [ { "assetName": "Makine Adı", "riskLevel": "High" | "Medium" | "Low", "probability": 0-100, "reason": "Teknik Gerekçe", "suggestedAction": "Teknik Talimat", "suggestedDate": "YYYY-MM-DD", "source": "ShiftReport" | "WorkOrderHistory" | "Hybrid" } ]`;
-        const response = await ai.models.generateContent({ model: "gemini-3-pro-preview", contents: prompt, config: { responseMimeType: "application/json", temperature: 0.3 } });
+        const response = await ai.models.generateContent({ model: "gemini-3-flash", contents: prompt, config: { responseMimeType: "application/json", temperature: 0.3 } });
         const text = response.text || '[]';
         const cleanJson = text.replace(/```json/g, '').replace(/```/g, '').trim();
         const result = JSON.parse(cleanJson);

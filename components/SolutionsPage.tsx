@@ -155,7 +155,7 @@ export const SolutionsPage: React.FC<SolutionsPageProps> = ({ workOrders, curren
           `;
 
           const response = await ai.models.generateContent({ 
-              model: "gemini-3-flash-preview", 
+              model: "gemini-3-flash", 
               contents: prompt, 
               config: { responseMimeType: "application/json" } 
           });

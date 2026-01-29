@@ -122,7 +122,7 @@ const Modal: React.FC<ModalProps> = ({ item, allData, onClose, onUpdateStatus, o
         const historyContext = chatMessages.slice(-6).map(m => `${m.role === 'user' ? 'Teknisyen' : 'Mühendis YZ'}: ${m.text}`).join('\n');
 
         const response = await ai.models.generateContent({ 
-          model: "gemini-3-flash-preview", 
+          model: "gemini-3-flash", 
           contents: `${historyContext}\nTeknisyen: ${queryToUse}`,
           config: { 
               systemInstruction: systemInstruction,
@@ -172,7 +172,7 @@ const Modal: React.FC<ModalProps> = ({ item, allData, onClose, onUpdateStatus, o
           `;
 
           const response = await ai.models.generateContent({ 
-              model: "gemini-3-flash-preview", 
+              model: "gemini-3-flash", 
               contents: prompt,
               config: { responseMimeType: "application/json" }
           });
