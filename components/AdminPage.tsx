@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { ShieldCheck, ShieldAlert, Activity, Database, Zap, Server, Settings, AlertTriangle, TrendingUp, DollarSign } from 'lucide-react';
-import { getUsageStats } from '../services/usageService';
+import { getUsageStats, getHistoricalUsageStats } from '../services/usageService';
 import { SystemUsageStats, QuotaConfig } from '../types';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 
@@ -39,6 +39,7 @@ const Gauge = ({ value, max, label, colorClass, icon: Icon }: any) => {
 
 export const AdminPage: React.FC = () => {
     const [stats, setStats] = useState<SystemUsageStats | null>(null);
+    const [historicalStats, setHistoricalStats] = useState<SystemUsageStats[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -49,8 +50,12 @@ export const AdminPage: React.FC = () => {
     }, []);
 
     const loadStats = async () => {
-        const data = await getUsageStats();
+        const [data, historical] = await Promise.all([
+            getUsageStats(),
+            getHistoricalUsageStats(7)
+        ]);
         setStats(data);
+        setHistoricalStats(historical);
         setLoading(false);
     };
 
@@ -161,15 +166,15 @@ export const AdminPage: React.FC = () => {
                             </div>
                         </div>
 
-                        {/* Visual Chart Placeholder (Simulated Trend) */}
+                        {/* Historical Usage Trend */}
                         <div className="bg-slate-50 rounded-2xl p-6 flex flex-col">
-                            <h4 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">GÜNLÜK AKTİVİTE TRENDİ</h4>
+                            <h4 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">7 GÜNLÜK AKTİVİTE TRENDİ</h4>
                             <div className="flex-1 min-h-[150px]">
                                 <ResponsiveContainer width="100%" height="100%">
-                                    <AreaChart data={[
-                                        {name: '08:00', val: 10}, {name: '10:00', val: 30}, {name: '12:00', val: 45}, 
-                                        {name: '14:00', val: 20}, {name: '16:00', val: 60}, {name: '18:00', val: stats.aiRequests}
-                                    ]}>
+                                    <AreaChart data={historicalStats.map(s => ({
+                                        name: new Date(s.date).toLocaleDateString('tr-TR', { weekday: 'short', day: 'numeric' }),
+                                        val: s.aiRequests
+                                    }))}>
                                         <defs>
                                             <linearGradient id="colorVal" x1="0" y1="0" x2="0" y2="1">
                                                 <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.2}/>

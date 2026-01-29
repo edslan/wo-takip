@@ -49,11 +49,11 @@ export const getUsageStats = async (): Promise<SystemUsageStats> => {
     const dateKey = getTodayKey();
     const ref = doc(db, 'system_usage', dateKey);
     const snap = await getDoc(ref);
-    
+
     if (snap.exists()) {
         return snap.data() as SystemUsageStats;
     }
-    
+
     return {
         date: dateKey,
         aiRequests: 0,
@@ -61,4 +61,31 @@ export const getUsageStats = async (): Promise<SystemUsageStats> => {
         dbWrites: 0,
         estimatedCost: 0
     };
+};
+
+export const getHistoricalUsageStats = async (days: number = 7): Promise<SystemUsageStats[]> => {
+    const results: SystemUsageStats[] = [];
+    const today = new Date();
+
+    for (let i = days - 1; i >= 0; i--) {
+        const date = new Date(today);
+        date.setDate(date.getDate() - i);
+        const dateKey = date.toISOString().split('T')[0];
+        const ref = doc(db, 'system_usage', dateKey);
+        const snap = await getDoc(ref);
+
+        if (snap.exists()) {
+            results.push(snap.data() as SystemUsageStats);
+        } else {
+            results.push({
+                date: dateKey,
+                aiRequests: 0,
+                dbReads: 0,
+                dbWrites: 0,
+                estimatedCost: 0
+            });
+        }
+    }
+
+    return results;
 };
