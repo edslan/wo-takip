@@ -1,0 +1,21 @@
+{
+  "short_name": "WO Manager",
+  "name": "WO Manager Enterprise",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/906/906334.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/906/906334.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#0c9aeb",
+  "background_color": "#f1f5f9",
+  "orientation": "portrait"
+}
